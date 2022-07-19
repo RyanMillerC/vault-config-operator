@@ -44,6 +44,9 @@ IMAGE_TAG_BASE ?= quay.io/redhat-cop/$(OPERATOR_NAME)
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
+# KIND_IMG defines the kind tool image used to test locally.
+KIND_IMG ?= docker.io/kindest/node
+
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
@@ -124,7 +127,7 @@ deploy-vault: kubectl helm
 .PHONY: kind-setup
 kind-setup: kind
 	$(KIND) delete cluster
-	$(KIND) create cluster --image docker.io/kindest/node:$(KUBECTL_VERSION) --config=./integration/cluster-kind.yaml
+	$(KIND) create cluster --image $(KIND_IMG):$(KUBECTL_VERSION) --config=./integration/cluster-kind.yaml
 
 
 .PHONY: ldap-setup 
